@@ -19,7 +19,7 @@ func NewPostgresStorer(db *sqlx.DB) *PostgesStorer {
 
 func (ps *PostgesStorer) CreateProduct(ctx context.Context, p *Product) (*Product, error) {
 	query := "INSERT INTO products (name, image, category, description, rating, num_reviews, price, count_in_stock) VALUES (:name, :image, :category, :description, :rating, :num_reviews, :price, :count_in_stock) RETURNING id"
-	
+
 	// Prepare the query with named parameters
 	stmt, err := ps.db.PrepareNamedContext(ctx, query)
 	if err != nil {
@@ -47,8 +47,8 @@ func (ps *PostgesStorer) GetProduct(ctx context.Context, id int64) (*Product, er
 	return &p, nil
 }
 
-func (ps *PostgesStorer) ListProducts(ctx context.Context) ([]*Product, error) {
-	var products []*Product
+func (ps *PostgesStorer) ListProducts(ctx context.Context) ([]Product, error) {
+	var products []Product
 	err := ps.db.SelectContext(ctx, &products, "SELECT * FROM products")
 	if err != nil {
 		return nil, fmt.Errorf("error listing products: %w", err)
@@ -76,4 +76,3 @@ func (ps *PostgesStorer) DeleteProduct(ctx context.Context, id int64) error {
 
 	return nil
 }
-

@@ -1,10 +1,10 @@
 package main
 
 import (
-	"context"
 	"log"
 	"os"
 
+	"github.com/frankie-mur/OrderMesh/api/server"
 	"github.com/frankie-mur/OrderMesh/db"
 	"github.com/frankie-mur/OrderMesh/ecomm-api/storer"
 	"github.com/joho/godotenv"
@@ -26,21 +26,6 @@ func main() {
 	log.Println("successfully connected to database")
 
 	store := storer.NewPostgresStorer(db.GetDB())
-
-	p := storer.Product{
-		Name: "Frank",
-	}
-	newP, err := store.CreateProduct(context.Background(), &p)
-	if err != nil {
-		log.Fatalf(err.Error())
-	}
-	log.Print(newP)
-
-	allP, err := store.ListProducts(context.Background())
-	if err != nil {
-		log.Fatalf(err.Error())
-	}
-
-	log.Print(allP)
+	_ = server.NewServer(store)
 
 }
